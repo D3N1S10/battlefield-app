@@ -33,7 +33,6 @@
 
 ## Примеры запросов (curl)
 
-```bash
 # Создать поле 20×20
 curl -X POST http://localhost:8080/battlefield/api/battlefields \
   -H "Content-Type: application/json" \
