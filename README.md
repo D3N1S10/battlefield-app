@@ -5,8 +5,6 @@
 
 Моделирование поля боя на сетке клеток. Боевые юниты различных типов занимают одну или несколько клеток, двигаются с разной скоростью, стреляют в различных направлениях. При попадании юнит повреждается или уничтожается.
 
-### Технологии
-Java 17, Jakarta Servlet 6.0, H2 Database (in-memory), HikariCP, Gson, SLF4J + Logback, Maven, Apache Tomcat 10.1+
 ---
 
 ## API Endpoints (14 шт.)
@@ -111,6 +109,7 @@ curl http://localhost:8080/battlefield/api/combat-log/1
 
 Фрагмент кода (`AppContextListener.java`) демонстрирует сборку зависимостей с использованием внедрения через конструктор и регистрацию сервисов в контейнере (IoC).
 
+```java
 // Создание и настройка зависимостей (компоновка графа объектов)
 DatabaseManager dbManager = new DatabaseManager();
 
@@ -123,3 +122,7 @@ CombatService combatService = new CombatServiceImpl(bfRepo, unitRepo, ...);  // 
 
 // Регистрация готовых сервисов в контейнере для последующего использования (IoC)
 container.register(CombatService.class, combatService);
+```
+
+### Технологии
+Java 17, Jakarta Servlet 6.0, H2 Database (in-memory), HikariCP, Gson, SLF4J + Logback, Maven, Apache Tomcat 10.1+
