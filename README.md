@@ -1,43 +1,35 @@
-Battlefield Simulator — Java Servlet Application
-Автор: Далецкий Денис, 3 курс, группа 14.2
-Репозиторий: github.com/D3N1S10/battlefield-app
+## Battlefield Simulator — Java Servlet Application
+
+**Автор:** Далецкий Денис, 3 курс, группа 14.2  
+**Репозиторий:** github.com/D3N1S10/battlefield-app
 
 Моделирование поля боя на сетке клеток. Боевые юниты различных типов занимают одну или несколько клеток, двигаются с разной скоростью, стреляют в различных направлениях. При попадании юнит повреждается или уничтожается.
 
-API Endpoints (13 шт.)
-Поля боя
-POST /api/battlefields — Создать поле боя
+## API Endpoints (13 шт.)
 
-GET /api/battlefields — Список всех полей
+### Поля боя
+POST /api/battlefields — Создать поле боя  
+GET /api/battlefields — Список всех полей  
+GET /api/battlefields/{id} — Получить поле по ID  
+DELETE /api/battlefields/{id} — Удалить поле  
+GET /api/battlefields-state/{id} — Полное состояние поля  
 
-GET /api/battlefields/{id} — Получить поле по ID
+### Юниты
+POST /api/units — Разместить юнит  
+GET /api/units/{id} — Информация о юните  
+POST /api/units/{id}/move — Переместить юнит  
+POST /api/units/{id}/shoot — Стрельба по координатам  
+DELETE /api/units/{id} — Удалить юнит  
 
-DELETE /api/battlefields/{id} — Удалить поле
+### Объекты и лог
+POST /api/objects — Разместить объект  
+GET /api/objects/{id} — Информация об объекте  
+DELETE /api/objects/{id} — Удалить объект  
+GET /api/combat-log/{battlefieldId} — Журнал боевых действий  
 
-GET /api/battlefields-state/{id} — Полное состояние поля
+## Примеры запросов (curl)
 
-Юниты
-POST /api/units — Разместить юнит
-
-GET /api/units/{id} — Информация о юните
-
-POST /api/units/{id}/move — Переместить юнит
-
-POST /api/units/{id}/shoot — Стрельба по координатам
-
-DELETE /api/units/{id} — Удалить юнит
-
-Объекты и лог
-POST /api/objects — Разместить объект
-
-GET /api/objects/{id} — Информация об объекте
-
-DELETE /api/objects/{id} — Удалить объект
-
-GET /api/combat-log/{battlefieldId} — Журнал боевых действий
-
-Примеры запросов (curl)
-# Создать поле 20×20
+# Создать поле 20x20
 curl -X POST http://localhost:8080/battlefield/api/battlefields \
   -H "Content-Type: application/json" \
   -d '{"name":"Kursk","width":20,"height":20}'
@@ -67,8 +59,10 @@ curl http://localhost:8080/battlefield/api/battlefields-state/1
 
 # Журнал боя
 curl http://localhost:8080/battlefield/api/combat-log/1
-Архитектура и ООП
-Иерархия классов
+
+## Архитектура и ООП
+
+### Иерархия классов
 GameObject (abstract)
    ├── BattleUnit (abstract) implements Damageable, Shootable
    │       ├── Tank implements Movable          — 2×2, speed=3, HP=150
@@ -78,28 +72,25 @@ GameObject (abstract)
    │       ├── APC implements Movable           — 2×1, speed=4, HP=100
    │       └── Turret (БЕЗ Movable!)           — 1×1, speed=0, HP=120
    └── StaticObject implements Damageable
-Интерфейсы
+
+### Интерфейсы
 Damageable — getHealth(), getMaxHealth(), takeDamage(int), isDestroyed()
-
 Movable — getSpeed(), move(Direction) (Turret не реализует)
-
 Shootable — getAttackRange(), getDamage(), getFireDirection(), canShootAt(Position)
 
-Паттерны
+### Паттерны
 Factory Method — UnitFactory.create(UnitType, ...)
-
 Template Method — BaseServlet.handleRequest() для единой обработки ошибок
-
 Repository — абстрагирует JDBC
-
 IoC / DI — ServiceContainer + constructor injection
 
-Dependency Injection
+### Dependency Injection
 // AppContextListener.java — точка сборки (constructor injection)
 DatabaseManager dbManager = new DatabaseManager();
 BattlefieldRepository bfRepo = new BattlefieldRepositoryImpl(dbManager);     // DI
 UnitRepository unitRepo = new UnitRepositoryImpl(dbManager);                  // DI
 CombatService combatService = new CombatServiceImpl(bfRepo, unitRepo, ...);  // DI
 container.register(CombatService.class, combatService);                      // IoC
-Технологии
+
+### Технологии
 Java 17, Jakarta Servlet 6.0, H2 Database (in-memory), HikariCP, Gson, SLF4J + Logback, Maven, Apache Tomcat 10.1+
